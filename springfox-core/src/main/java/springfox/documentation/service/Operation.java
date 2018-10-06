@@ -82,8 +82,8 @@ public class Operation {
     this.protocol = protocol;
     this.isHidden = isHidden;
     this.securityReferences = toAuthorizationsMap(securityReferences);
-    this.parameters = FluentIterable.from(parameters)
-        .toSortedList(byParameterName());
+    this.parameters = parameters.stream()
+        .sorted(byOrder().thenComparing(byParameterName())).collect(toList());
     this.responseMessages = responseMessages;
     this.deprecated = deprecated;
     this.vendorExtensions = newArrayList(vendorExtensions);
@@ -173,6 +173,10 @@ public class Operation {
 
   public List<VendorExtension> getVendorExtensions() {
     return vendorExtensions;
+  }
+
+  private Comparator<Parameter> byOrder() {
+    return Comparator.comparingInt(Parameter::getOrder);
   }
 
   private Comparator<Parameter> byParameterName() {
