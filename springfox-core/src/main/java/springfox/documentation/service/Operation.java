@@ -30,6 +30,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.*;
 import static com.google.common.collect.Maps.*;
@@ -83,7 +85,7 @@ public class Operation {
     this.isHidden = isHidden;
     this.securityReferences = toAuthorizationsMap(securityReferences);
     this.parameters = parameters.stream()
-        .sorted(byOrder().thenComparing(byParameterName())).collect(toList());
+        .sorted(byOrder().thenComparing(byParameterName())).collect(Collectors.toList());
     this.responseMessages = responseMessages;
     this.deprecated = deprecated;
     this.vendorExtensions = newArrayList(vendorExtensions);
@@ -176,7 +178,12 @@ public class Operation {
   }
 
   private Comparator<Parameter> byOrder() {
-    return Comparator.comparingInt(Parameter::getOrder);
+    return Comparator.comparingInt(new ToIntFunction<Parameter>() {
+      @Override
+      public int applyAsInt(Parameter value) {
+        return value.getOrder();
+      }
+    });
   }
 
   private Comparator<Parameter> byParameterName() {

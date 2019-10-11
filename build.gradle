@@ -75,8 +75,8 @@ subprojects {
 
   compileJava.options.encoding = 'UTF-8'
 
-  sourceCompatibility = jdkVersion
-  targetCompatibility = jdkVersion
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
   group = 'io.springfox'
   version = project.rootProject.version
 
